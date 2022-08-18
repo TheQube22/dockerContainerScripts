@@ -1,0 +1,30 @@
+FROM i386/ubuntu:18.04
+
+LABEL maintainer="christopher.almajose@ngc.com"
+
+# Install packages
+# TODO : Remove un-needed..
+RUN apt-get update && apt-get install -y --no-install-recommends \
+vim net-tools iputils-ping ifupdown iproute2 \
+iperf kmod python openjdk-8-jre-headless \
+iptables traceroute bmon iftop sudo nano htop \
+python3 python3-pyroute2 \
+unzip bwm-ng dos2unix && apt-get clean && \
+apt-get autoclean && rm -fr /var/lib/apt/lists/*
+
+# EXPOSE Ports
+EXPOSE 698/udp 5001-5400/udp 33434-33625/udp 80/tcp 22/tcp 2005/tcp
+
+# OS Directory Setup
+RUN mkdir -p /opt/router/ 
+
+# TODO : Prefer volume mapping versus copying
+# Copy software into directory
+ADD olsrd /opt/router/olsrd
+# ADD rnc/var /var
+# ADD rnc/opt /opt
+
+# Run container forever
+CMD sleep infinity
+
+
